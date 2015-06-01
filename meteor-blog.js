@@ -1,4 +1,43 @@
+AccountsTemplates.configure({
+	confirmPassword: true,
+	enablePasswordChange: true,
+	forbidClientAccountCreation: false,
+	sendVerificationEmail: true,
+	lowercaseUsername: false,
+	continuousValidation: true,
+	negativeFeedback: true,
+	negativeValidation: true,
+	positiveValidation: true,
+	positiveFeedback: true,
+	showValidating: true
+});
+
 Posts = new Mongo.Collection("posts");
+Posts.attachSchema(new SimpleSchema({
+	title: {
+		type: String,
+		label: "Title",
+		max: 100
+	},
+	excerpt: {
+		type: String,
+		label: "Excerpt",
+		max: 200
+	},
+	content: {
+		type: String,
+		label: "Content"
+	},
+	author: {
+		type: String,
+		label: "Author",
+		max: 25
+	},
+	createdAt: {
+		type: Date,
+		optional: true
+	}
+}));
 
 Router.map(function(){
 	this.route('defaultBlog', {
@@ -24,36 +63,43 @@ Router.route('/admin', function() {
 
 if (Meteor.isClient) {
 
+	Template.defaultBlog.rendered = function(){
+		$(".mainScrollContainer").mCustomScrollBar({autoExpandScrollbar: true});
+	};
+
   Template.postlist.helpers({
     posts: function() {
 		return Posts.find({}, {sort: {createdAt: -1}});
 	}
   });
   
-  Template.writepost.rendered = function() {
+  Template.modal.rendered = function() {
 	$("#writePost").draggable({
 		handle: ".modal-header"
 	});
   };
   
-	Template.writepost.events({
-		"submit .add_post": function (event) {
-			var title = event.target.title.value;
-			var excerpt = event.target.excerpt.value;
-			var content = event.target.content.value;
-			
-			Posts.insert({
-				title: title,
-				excerpt: excerpt,
-				content: content,
-				createdAt: new Date()
-			});
-			
-			event.target.title.value = '';
-			event.target.excerpt.value = '';
-			event.target.content.value = '';
+	AutoForm.hooks({
+		writePostForm: {
+			onSubmit: function(insertDoc, updateDoc, currentDoc) {
+				if(createPost(insertDoc)) {
+					this.done();
+				} else {
+					this.done(new Error('Submission failed.'));
+				}
+				return false;
+			}
 		}
 	});
+	
+	function createPost (insert) {
+			insert.createdAt = new Date();
+			return Posts.insert(insert);
+		}
+	
+	// Template.writepost.events({
+		// "submit #writePostForm": 
+	// });
 }
 
 if (Meteor.isServer) {

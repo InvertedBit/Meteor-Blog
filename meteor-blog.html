@@ -9,23 +9,24 @@
 <template name="defaultBlog">
 
 	{{> header}}
-	<div class="jumbotron">
-		<div class="container">
-			<h1>My Blog</h1>
-			<p class="lead">This is my blog. There are many like it, but this is mine.</p>
-			<h2>Featured Post</h2>
-			<div class="well">
-				<h3>{{title}}</h3>
-				
-				<p class="lead">{{content}}</p>
+	<div class="mainScrollContainer" data-mcs-theme="dark">
+		<div class="jumbotron">
+			<div class="container">
+				<h1>My Blog</h1>
+				<p class="lead">This is my blog. There are many like it, but this is mine.</p>
+				<h2>Featured Post</h2>
+				<div class="well">
+					<h3>{{title}}</h3>
+					
+					<p class="lead">{{content}}</p>
+				</div>
 			</div>
 		</div>
+		<div class="container">
+				{{> postlist}}
+		</div>
 	</div>
-	<div class="container">
-			{{> postlist}}
-	</div>
-	
-{{> writepost}}
+{{> modals}}
 </template>
 
 <template name="header">
@@ -47,36 +48,11 @@
 					<li><a href="#about">About</a></li>
 					<li><a href="#contact">Contact</a></li>
 				</ul>
-				<button type="button" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#writePost">Create Post</button>
-				<button type="button" class="btn btn-success navbar-btn navbar-right" data-toggle="modal" data-target="#writePost">Sign in</button>
+				<button type="button" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#writePost"><i class="fa fa-pencil-square-o"></i></button>
+				<button type="button" class="btn btn-success navbar-btn navbar-right" data-toggle="modal" data-target="#signIn">Sign in</button>
 			</div>
 		</div>
 	</nav>
-</template>
-
-<template name="writepost">
-	<div class="modal fade add_post" id="writePost" tabindex="-1" role="dialog" aria-labelledby="writePostLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="writePostLabel">Create new post</h4>
-				</div>
-				<div class="modal-body">
-					<form class="addpost">
-						<label for="postTitle">Title:</label><input type="text" name="title" id="postTitle" /><br />
-						<label for="postExcerpt">Excerpt:</label><input type="text" name="excerpt" id="postExcerpt" /><br />
-						<label for="postContent">Content:</label><input type="text" name="content" id="postContent" /><br />
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Create post</button>
-				</div>
-			</div>
-		
-		</div>
-	</div>
 </template>
 
 <template name="postlist">
@@ -89,7 +65,47 @@
 
 <template name="post">
 	<div class="post">
-		<div class="title">{{title}} <button class="like">Like</button></div>
+		<div class="title">{{title}} - {{createdAt}} <button class="like">Like</button></div>
 		<div class="excerpt">{{excerpt}}</div>
+	</div>
+</template>
+
+<template name="modals">
+	<div class="modal fade add_post" id="writePost" tabindex="-1" role="dialog" aria-labelledby="writePostLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				{{#autoForm collection="Posts" id="writePostForm" type="normal"}}
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="writePostLabel">Create new post</h4>
+					</div>
+					<div class="modal-body">
+						<fieldset>
+							{{>afQuickField name='title'}}
+							{{>afQuickField name='excerpt' rows=2}}
+							{{>afQuickField name='content' rows=6}}
+							{{>afQuickField name='author'}}
+						</fieldset>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="submit" id="createPost" class="btn btn-primary">Create post</button>
+					</div>
+				{{/autoForm}}
+			</div>
+		
+		</div>
+	</div>
+	
+	<div class="modal fade add_post" id="signIn" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+					<div class="modal-body">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						{{> atForm}}
+					</div>
+			</div>
+		
+		</div>
 	</div>
 </template>

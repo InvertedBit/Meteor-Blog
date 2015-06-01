@@ -14,3 +14,12 @@ mquandalle:jade
 jquery
 linto:jquery-ui
 aldeed:autoform
+aldeed:collection2
+accounts-password
+accounts-ui
+accounts-github
+accounts-google
+useraccounts:bootstrap
+fortawesome:fontawesome
+jackyqiu:meteor-jquery-nicescroll
+maazalik:malihu-jquery-custom-scrollbar
