@@ -22,4 +22,7 @@ accounts-google
 useraccounts:bootstrap
 fortawesome:fontawesome
 jackyqiu:meteor-jquery-nicescroll
-maazalik:malihu-jquery-custom-scrollbar
+mrt:malihu-custom-scrollbar
+momentjs:moment
+email
+jelena:meteor-perspective-navigation
